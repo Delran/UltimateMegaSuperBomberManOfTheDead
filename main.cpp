@@ -26,6 +26,9 @@ const GLuint HEIGHT = 600;
 
 /* --- Global variables --- */
 
+// Movement vector
+glm::vec3 movement;
+
 // Keyboard keys
 bool keys[1024];
 
@@ -39,7 +42,7 @@ GLfloat lastX;
 GLfloat lastY;
 
 // Camera
-Camera camera (glm::vec3 (0.0f, 0.0f, 3.0f), glm::vec3 (0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 45.0f);
+Camera camera (glm::vec3 (0.0f, 0.0f, 2.0f), glm::vec3 (0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 45.0f);
 
 /* --- Key callback function --- */
 
@@ -78,9 +81,6 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 
     lastX = xPos;
     lastY = yPos;
-
-    // Reorient the camera with the mouse offset
-    camera.processMouseMovement(xOffset, yOffset, deltaTime);
 }
 
 /* --- Movement function --- */
@@ -90,19 +90,35 @@ void doMovement()
     // Move the camera in the chosen direction
     if (keys[GLFW_KEY_W])
     {
-        camera.processKeyboard(CameraMovement::FORWARD, deltaTime);
+        movement += (glm::vec3 (0.0f, 1.0f, 0.0f) * deltaTime);
+        if (movement.y > 0.25f)
+        {
+            movement.y = 0.25f;
+        }
     }
     if (keys[GLFW_KEY_S])
     {
-        camera.processKeyboard(CameraMovement::BACKWARD, deltaTime);
+        movement -= (glm::vec3 (0.0f, 1.0f, 0.0f) * deltaTime);
+        if (movement.y < -0.25f)
+        {
+            movement.y = -0.25f;
+        }
     }
     if (keys[GLFW_KEY_A])
     {
-        camera.processKeyboard(CameraMovement::LEFT, deltaTime);
+        movement -= (glm::vec3 (1.0f, 0.0f, 0.0f) * deltaTime * 2.0f);
+        if (movement.x < -1.375f)
+        {
+            movement.x = -1.375f;
+        }
     }
     if (keys[GLFW_KEY_D])
     {
-        camera.processKeyboard(CameraMovement::RIGHT, deltaTime);
+        movement += (glm::vec3 (1.0f, 0.0f, 0.0f) * deltaTime * 2.0f);
+        if (movement.x > 1.375f)
+        {
+            movement.x = 1.375f;
+        }
     }
 }
 
@@ -162,7 +178,7 @@ int main(int argc, char const *argv[])
     Shader shaderProgram ("vertexShader.glsl", "fragmentShader.glsl");
     shaderProgram.use();
 
-    GLfloat vertices[] =
+    GLfloat square[] =
     {
         // Coords               // Colors
         -0.1f, -0.1f, 0.0f,     1.0f, 0.5f, 0.2f,
@@ -177,22 +193,86 @@ int main(int argc, char const *argv[])
     glm::vec3 positions[] =
     {
         // Coords
-        glm::vec3 (0.0f, 0.5f, 0.0f),
-        glm::vec3 (0.0f, -0.5f, 0.0f)
+        glm::vec3 (0.0f, 0.75f, 0.0f),
+        glm::vec3 (0.0f, -0.75f, 0.0f)
     };
 
     // Buffers generation
-    GLuint vbo;
-    GLuint vao;
+    GLuint vboSquare;
+    GLuint vaoSquare;
 
-    glGenBuffers(1, &vbo);
-    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vboSquare);
+    glGenVertexArrays(1, &vaoSquare);
 
     // Fill VBO with data and then bind VBO to VAO
-    glBindVertexArray(vao);
+    glBindVertexArray(vaoSquare);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, vboSquare);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0);
+
+    GLfloat upBackground[] =
+    {
+        // Coords               // Colors
+        -2.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
+        -2.0f, 1.5f, -0.1f,     0.0f, 0.0f, 1.0f,
+        2.0f, 1.5f, -0.1f,      0.0f, 0.0f, 1.0f,
+
+        -2.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
+        2.0f, 0.4f, -0.1f,      0.0f, 0.0f, 1.0f,
+        2.0f, 1.5f, -0.1f,      0.0f, 0.0f, 1.0f
+    };
+
+    // Buffers generation
+    GLuint vboUpBackground;
+    GLuint vaoUpBackground;
+
+    glGenBuffers(1, &vboUpBackground);
+    glGenVertexArrays(1, &vaoUpBackground);
+
+    // Fill VBO with data and then bind VBO to VAO
+    glBindVertexArray(vaoUpBackground);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboUpBackground);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(upBackground), upBackground, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0);
+
+    GLfloat downBackground[] =
+    {
+        // Coords               // Colors
+        -2.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
+        -2.0f, -1.5f, -0.1f,    1.0f, 0.0f, 0.0f,
+        2.0f, -1.5f, -0.1f,     1.0f, 0.0f, 0.0f,
+
+        -2.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
+        2.0f, -0.4f, -0.1f,     1.0f, 0.0f, 0.0f,
+        2.0f, -1.5f, -0.1f,     1.0f, 0.0f, 0.0f
+    };
+
+    // Buffers generation
+    GLuint vboDownBackground;
+    GLuint vaoDownBackground;
+
+    glGenBuffers(1, &vboDownBackground);
+    glGenVertexArrays(1, &vaoDownBackground);
+
+    // Fill VBO with data and then bind VBO to VAO
+    glBindVertexArray(vaoDownBackground);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboDownBackground);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(downBackground), downBackground, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
@@ -228,26 +308,64 @@ int main(int argc, char const *argv[])
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
         // Bind VAO
-        glBindVertexArray(vao);
+        glBindVertexArray(vaoSquare);
 
-        // Draw both squares
-        for (unsigned i = 0; i < 2; i++)
-        {
-            // Send model matrix to shader program
-            glm::mat4 model;
-            model = glm::translate(model, positions[i]);
-            glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-
-            // Draw 3D object in VBO
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }
-
-        // Draw rotating square
+        // Draw player square
 
         // Send model matrix to shader program
-        glm::mat4 model;
-        model = glm::rotate(model, glm::radians(20.0f * (GLfloat)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glm::mat4 modelPlayer;
+        modelPlayer = glm::translate(modelPlayer, positions[0]);
+        modelPlayer = glm::translate(modelPlayer, movement);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelPlayer));
+
+        // Draw 3D object in VBO
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // Draw other player square
+
+        glm::mat4 modelOtherPlayer;
+        modelOtherPlayer = glm::translate(modelOtherPlayer, positions[1]);
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelOtherPlayer));
+
+        // Draw 3D object in VBO
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // Draw bomb square
+
+        // Send model matrix to shader program
+        glm::mat4 modelBomb;
+        modelBomb = glm::rotate(modelBomb, glm::radians(360.0f * (GLfloat)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelBomb));
+
+        // Draw 3D object in VBO
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // Unbind VAO
+        glBindVertexArray(0);
+
+        // Draw up background
+
+        // Bind VAO
+        glBindVertexArray(vaoUpBackground);
+
+        // Send model matrix to shader program
+        glm::mat4 modelUpBackground;
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelUpBackground));
+
+        // Draw 3D object in VBO
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // Unbind VAO
+        glBindVertexArray(0);
+
+        // Draw down background
+
+        // Bind VAO
+        glBindVertexArray(vaoDownBackground);
+
+        // Send model matrix to shader program
+        glm::mat4 modelDownBackground;
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelDownBackground));
 
         // Draw 3D object in VBO
         glDrawArrays(GL_TRIANGLES, 0, 6);
