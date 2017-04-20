@@ -17,6 +17,7 @@
 // My libraries
 #include "Shader.hpp"
 #include "Camera.hpp"
+#include "Player.hpp"
 
 /* --- Constants --- */
 
@@ -28,6 +29,10 @@ const GLuint HEIGHT = 600;
 
 // Movement vector
 glm::vec3 movement;
+
+// Scrolling effect
+glm::vec3 scrolling = glm::vec3(0.0f, 0.0f, 0.0f);
+float totalScroll = 0;
 
 // Keyboard keys
 bool keys[1024];
@@ -76,8 +81,8 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
         firstMouseCallback = false;
     }
 
-    GLfloat xOffset = xPos - lastX;
-    GLfloat yOffset = lastY - yPos;
+    /*GLfloat xOffset = xPos - lastX;
+    GLfloat yOffset = lastY - yPos;*/
 
     lastX = xPos;
     lastY = yPos;
@@ -91,35 +96,60 @@ void doMovement()
     if (keys[GLFW_KEY_W])
     {
         movement += (glm::vec3 (0.0f, 1.0f, 0.0f) * deltaTime);
-        if (movement.y > 0.25f)
-        {
-            movement.y = 0.25f;
-        }
     }
     if (keys[GLFW_KEY_S])
     {
         movement -= (glm::vec3 (0.0f, 1.0f, 0.0f) * deltaTime);
-        if (movement.y < -0.25f)
-        {
-            movement.y = -0.25f;
-        }
     }
     if (keys[GLFW_KEY_A])
     {
         movement -= (glm::vec3 (1.0f, 0.0f, 0.0f) * deltaTime * 2.0f);
-        if (movement.x < -1.375f)
-        {
-            movement.x = -1.375f;
-        }
     }
     if (keys[GLFW_KEY_D])
     {
         movement += (glm::vec3 (1.0f, 0.0f, 0.0f) * deltaTime * 2.0f);
-        if (movement.x > 1.375f)
-        {
-            movement.x = 1.375f;
-        }
     }
+    if (movement.y > 0.25f)
+    {
+        movement.y = 0.25f;
+    }
+    if (movement.y < -0.25f)
+    {
+        movement.y = -0.25f;
+    }
+    if (movement.x + scrolling.x < -1.375f)
+    {
+        movement.x = -1.375f - scrolling.x;
+    }
+    if (movement.x + scrolling.x > 1.375f)
+    {
+        movement.x = 1.375f - scrolling.x;
+    }
+}
+
+/* --- Scrolling function --- */
+void scroll()
+{
+    /*if (totalScroll < 100)
+    {
+        totalScroll += 0.1;
+        scrolling.x -= 0.075f * deltaTime * 5;
+    }
+    else if (totalScroll < 200)
+    {
+        totalScroll += 0.2;
+        scrolling.x -= 0.15f * deltaTime * 5;
+    }
+    else if (totalScroll < 300)
+    {
+        totalScroll += 0.3;
+        scrolling.x -= 0.225f * deltaTime * 5;
+    }
+    else if (totalScroll < 400)
+    {
+        totalScroll += 0.5;
+        scrolling.x -= 0.3f * deltaTime * 5;
+    }*/
 }
 
 /* --- Main function --- */
@@ -178,7 +208,10 @@ int main(int argc, char const *argv[])
     Shader shaderProgram ("vertexShader.glsl", "fragmentShader.glsl");
     shaderProgram.use();
 
-    GLfloat square[] =
+    // Player
+    Player player (glm::vec3(0.0f, 0.0f, 0.0f));
+
+    float square[] =
     {
         // Coords               // Colors
         -0.1f, -0.1f, 0.0f,     1.0f, 0.5f, 0.2f,
@@ -222,11 +255,11 @@ int main(int argc, char const *argv[])
         // Coords               // Colors
         -2.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
         -2.0f, 1.5f, -0.1f,     0.0f, 0.0f, 1.0f,
-        2.0f, 1.5f, -0.1f,      0.0f, 0.0f, 1.0f,
+        26.0f, 1.5f, -0.1f,     0.0f, 0.0f, 1.0f,
 
         -2.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
-        2.0f, 0.4f, -0.1f,      0.0f, 0.0f, 1.0f,
-        2.0f, 1.5f, -0.1f,      0.0f, 0.0f, 1.0f
+        26.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
+        26.0f, 1.5f, -0.1f,     0.0f, 0.0f, 1.0f
     };
 
     // Buffers generation
@@ -254,11 +287,11 @@ int main(int argc, char const *argv[])
         // Coords               // Colors
         -2.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
         -2.0f, -1.5f, -0.1f,    1.0f, 0.0f, 0.0f,
-        2.0f, -1.5f, -0.1f,     1.0f, 0.0f, 0.0f,
+        26.0f, -1.5f, -0.1f,    1.0f, 0.0f, 0.0f,
 
         -2.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
-        2.0f, -0.4f, -0.1f,     1.0f, 0.0f, 0.0f,
-        2.0f, -1.5f, -0.1f,     1.0f, 0.0f, 0.0f
+        26.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
+        26.0f, -1.5f, -0.1f,    1.0f, 0.0f, 0.0f
     };
 
     // Buffers generation
@@ -292,6 +325,7 @@ int main(int argc, char const *argv[])
         // Callbacks
         glfwPollEvents();
         doMovement();
+        scroll();
 
         // Clear window
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -305,6 +339,7 @@ int main(int argc, char const *argv[])
         // Send view matrix to shader program
         glm::mat4 view;
         view = camera.getViewMatrix();
+        view = glm::translate(view, scrolling);
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
         // Bind VAO
@@ -372,6 +407,10 @@ int main(int argc, char const *argv[])
 
         // Unbind VAO
         glBindVertexArray(0);
+
+        glm::mat4 playerModel = glm::translate(playerModel, player.getPosition());
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(playerModel));
+        player.draw();
 
         glfwSwapBuffers(window);
     }
