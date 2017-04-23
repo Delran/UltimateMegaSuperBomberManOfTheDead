@@ -58,7 +58,7 @@ private:
 
 public:
     // Constructor
-    Camera (glm::vec3 initialPosition, glm::vec3 initialWorldUp, GLfloat initialYaw, GLfloat initialPitch, GLfloat initialFov);
+    Camera (glm::vec3, glm::vec3, GLfloat, GLfloat, GLfloat);
 
     // Get FOV method
     GLfloat getFov();
@@ -67,13 +67,13 @@ public:
     glm::mat4 getViewMatrix();
 
     // Keyboard handle method
-    void processKeyboard(CameraMovement direction, GLfloat deltaTime);
+    void processKeyboard(CameraMovement, GLfloat);
 
     // Mouse handle method
-    void processMouseMovement(GLfloat xoffset, GLfloat yoffset, GLfloat deltaTime);
+    void processMouseMovement(GLfloat, GLfloat, GLfloat);
 
     // Mouse scroll handle method
-    void processMouseScroll(GLfloat yoffset, GLfloat deltaTime);
+    void processMouseScroll(GLfloat, GLfloat);
 };
 
 #endif /* end of include guard: CAMERA_H */
