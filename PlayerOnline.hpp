@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-class PlayerBot : public Player
+class PlayerOnline : public Player
 {
 public:
 

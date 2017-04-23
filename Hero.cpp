@@ -1,11 +1,12 @@
 #include "Hero.hpp"
 
-Hero::Hero()
+Hero::Hero (const float _speed, const float _bombHoldingTime, const std::string& _texturePath)
+    :speed(_speed), bombHoldingTime(_bombHoldingTime), texturePath(_texturePath)
+{}
+
+Hero::~Hero(){}
+
+const float* Hero::getVertices() const
 {
-
-}
-
-Hero::~Hero()
-{
-
+    return vertices;
 }

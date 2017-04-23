@@ -49,6 +49,9 @@ GLfloat lastY;
 // Camera
 Camera camera (glm::vec3 (0.0f, 0.0f, 2.0f), glm::vec3 (0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 45.0f);
 
+// Player
+Player* player;
+
 /* --- Key callback function --- */
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -108,6 +111,10 @@ void doMovement()
     if (keys[GLFW_KEY_D])
     {
         movement += (glm::vec3 (1.0f, 0.0f, 0.0f) * deltaTime * 2.0f);
+    }
+    if (keys[GLFW_KEY_Q])
+    {
+        player->specialAction();
     }
     if (movement.y > 0.25f)
     {
@@ -207,9 +214,6 @@ int main(int argc, char const *argv[])
     // Creating a shader program and use it
     Shader shaderProgram ("vertexShader.glsl", "fragmentShader.glsl");
     shaderProgram.use();
-
-    // Player
-    Player player (glm::vec3(0.0f, 0.0f, 0.0f));
 
     float square[] =
     {
@@ -314,6 +318,9 @@ int main(int argc, char const *argv[])
 
     glBindVertexArray(0);
 
+    // Player
+    player = new Player (glm::vec3(0.0f, 0.0f, 0.0f), Heroes::MANLY_BOMBER);
+
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
@@ -408,9 +415,8 @@ int main(int argc, char const *argv[])
         // Unbind VAO
         glBindVertexArray(0);
 
-        glm::mat4 playerModel = glm::translate(playerModel, player.getPosition());
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(playerModel));
-        player.draw();
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(player->getModelMatrix()));
+        player->draw();
 
         glfwSwapBuffers(window);
     }

@@ -1,14 +1,22 @@
 #include "Player.hpp"
 
-Player::Player(const glm::vec3& _position)
-    :position(_position)
+Player::Player(const glm::vec3& initialPosition, const Heroes selectedHero)
+    :position(initialPosition)
 {
+    switch (selectedHero)
+    {
+        case Heroes::MANLY_BOMBER:
+            hero = new ManlyBomber;
+            break;
+    }
+
     glGenBuffers(1, &vbo);
     glGenVertexArrays(1, &vao);
 
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    const float* vertices = hero->getVertices();
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
@@ -18,12 +26,13 @@ Player::Player(const glm::vec3& _position)
 
     glBindVertexArray(0);
 }
-Player::~Player()
-{
 
-}
+Player::~Player(){}
+
 void Player::draw()
 {
+    hero->idle();
+
     glBindVertexArray(vao);
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -31,7 +40,12 @@ void Player::draw()
     glBindVertexArray(0);
 }
 
-const glm::vec3& Player::getPosition() const
+void Player::specialAction()
 {
-    return position;
+    hero->specialAction();
+}
+
+const glm::mat4& Player::getModelMatrix() const
+{
+    return model;
 }

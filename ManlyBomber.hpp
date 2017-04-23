@@ -3,16 +3,9 @@
 class ManlyBomber : public Hero
 {
 public:
-
     ManlyBomber();
-    ~ManlyBomber();
-
+    virtual ~ManlyBomber();
 private:
-
-
-
-protected:
-
-
-
+    virtual void specialAction();
+    virtual void idle();
 };
