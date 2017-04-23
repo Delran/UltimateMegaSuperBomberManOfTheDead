@@ -25,7 +25,7 @@ enum class Heroes
 class Player
 {
 public:
-    Player (const glm::vec3& initialPosition, const Heroes selectedHero);
+    Player (const glm::vec3&, const Heroes);
     virtual ~Player ();
     const glm::mat4& getModelMatrix() const;
     void draw();

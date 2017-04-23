@@ -19,7 +19,7 @@ private:
     float bombHoldingTime;
     std::string texturePath;
 protected:
-    Hero (const float _speed, const float _bombHoldingTime, const std::string& _texturePath);
+    Hero (const float, const float, const std::string&);
     float* vertices;
 };
 

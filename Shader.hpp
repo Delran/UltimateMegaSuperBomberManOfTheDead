@@ -25,7 +25,7 @@ public:
 	/* --- Methods --- */
 
 	// Constructor
-	Shader (const GLchar* vertexShaderPath, const GLchar* fragmentShaderPath);
+	Shader (const GLchar*, const GLchar*);
 
   	// Use shader
   	void use();
