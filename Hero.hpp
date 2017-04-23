@@ -5,13 +5,15 @@
 
 class Hero
 {
+friend class Player;
+
 public:
     virtual ~Hero ();
-    const float* getVertices() const;
-    virtual void idle() = 0;
-    virtual void specialAction() = 0;
 private:
     Hero() = delete;
+
+    virtual void idle() = 0;
+    virtual void specialAction() = 0;
 
     float speed;
     float bombHoldingTime;

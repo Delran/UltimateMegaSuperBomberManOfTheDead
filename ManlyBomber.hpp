@@ -1,3 +1,6 @@
+#ifndef MANLYBOMBER_HPP
+#define MANLYBOMBER_HPP
+
 #include "Hero.hpp"
 
 class ManlyBomber : public Hero
@@ -9,3 +12,5 @@ private:
     virtual void specialAction();
     virtual void idle();
 };
+
+#endif

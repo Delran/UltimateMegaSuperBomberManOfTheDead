@@ -1,3 +1,6 @@
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
+
 // Glew
 #include <GL/glew.h>
 
@@ -34,4 +37,7 @@ private:
     Hero* hero;
     GLuint vao;
     GLuint vbo;
+    GLuint playerTexture;
 };
+
+#endif

@@ -5,8 +5,3 @@ Hero::Hero (const float _speed, const float _bombHoldingTime, const std::string&
 {}
 
 Hero::~Hero(){}
-
-const float* Hero::getVertices() const
-{
-    return vertices;
-}
