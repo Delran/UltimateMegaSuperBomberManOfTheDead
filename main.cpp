@@ -4,15 +4,15 @@
 #include <iostream>
 
 // Glew
-#include <GL/glew.h>
+#include <GLEW/glew.h>
 
 // Glfw
 #include <GLFW/glfw3.h>
 
 // Glm
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <GLM/glm.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtc/type_ptr.hpp>
 
 // My libraries
 #include "Shader.hpp"
@@ -22,17 +22,10 @@
 /* --- Constants --- */
 
 // Window size
-const GLuint WIDTH = 800;
-const GLuint HEIGHT = 600;
+const GLuint WIDTH = 1600;
+const GLuint HEIGHT = 900;
 
 /* --- Global variables --- */
-
-// Movement vector
-glm::vec3 movement;
-
-// Scrolling effect
-glm::vec3 scrolling = glm::vec3(0.0f, 0.0f, 0.0f);
-float totalScroll = 0;
 
 // Keyboard keys
 bool keys[1024];
@@ -95,7 +88,7 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 
 void doMovement()
 {
-    // Move the camera in the chosen direction
+    /*// Move the camera in the chosen direction
     if (keys[GLFW_KEY_W])
     {
         movement += (glm::vec3 (0.0f, 1.0f, 0.0f) * deltaTime);
@@ -115,47 +108,6 @@ void doMovement()
     if (keys[GLFW_KEY_Q])
     {
         player->specialAction();
-    }
-    if (movement.y > 0.25f)
-    {
-        movement.y = 0.25f;
-    }
-    if (movement.y < -0.25f)
-    {
-        movement.y = -0.25f;
-    }
-    if (movement.x + scrolling.x < -1.375f)
-    {
-        movement.x = -1.375f - scrolling.x;
-    }
-    if (movement.x + scrolling.x > 1.375f)
-    {
-        movement.x = 1.375f - scrolling.x;
-    }
-}
-
-/* --- Scrolling function --- */
-void scroll()
-{
-    /*if (totalScroll < 100)
-    {
-        totalScroll += 0.1;
-        scrolling.x -= 0.075f * deltaTime * 5;
-    }
-    else if (totalScroll < 200)
-    {
-        totalScroll += 0.2;
-        scrolling.x -= 0.15f * deltaTime * 5;
-    }
-    else if (totalScroll < 300)
-    {
-        totalScroll += 0.3;
-        scrolling.x -= 0.225f * deltaTime * 5;
-    }
-    else if (totalScroll < 400)
-    {
-        totalScroll += 0.5;
-        scrolling.x -= 0.3f * deltaTime * 5;
     }*/
 }
 
@@ -215,109 +167,6 @@ int main(int argc, char const *argv[])
     Shader shaderProgram ("vertexShader.glsl", "fragmentShader.glsl");
     shaderProgram.use();
 
-    float square[] =
-    {
-        // Coords               // Colors
-        -0.1f, -0.1f, 0.0f,     1.0f, 0.5f, 0.2f,
-        -0.1f, 0.1f, 0.0f,      1.0f, 0.5f, 0.0f,
-        0.1f, 0.1f, 0.0f,       0.8f, 0.5f, 0.2f,
-
-        -0.1f, -0.1f, 0.0f,     1.0f, 0.5f, 0.2f,
-        0.1f, -0.1f, 0.0f,      0.8f, 0.5f, 0.0f,
-        0.1f, 0.1f, 0.0f,       0.8f, 0.5f, 0.2f
-    };
-
-    glm::vec3 positions[] =
-    {
-        // Coords
-        glm::vec3 (0.0f, 0.75f, 0.0f),
-        glm::vec3 (0.0f, -0.75f, 0.0f)
-    };
-
-    // Buffers generation
-    GLuint vboSquare;
-    GLuint vaoSquare;
-
-    glGenBuffers(1, &vboSquare);
-    glGenVertexArrays(1, &vaoSquare);
-
-    // Fill VBO with data and then bind VBO to VAO
-    glBindVertexArray(vaoSquare);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vboSquare);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(square), square, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
-
-    GLfloat upBackground[] =
-    {
-        // Coords               // Colors
-        -2.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
-        -2.0f, 1.5f, -0.1f,     0.0f, 0.0f, 1.0f,
-        26.0f, 1.5f, -0.1f,     0.0f, 0.0f, 1.0f,
-
-        -2.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
-        26.0f, 0.4f, -0.1f,     0.0f, 0.0f, 1.0f,
-        26.0f, 1.5f, -0.1f,     0.0f, 0.0f, 1.0f
-    };
-
-    // Buffers generation
-    GLuint vboUpBackground;
-    GLuint vaoUpBackground;
-
-    glGenBuffers(1, &vboUpBackground);
-    glGenVertexArrays(1, &vaoUpBackground);
-
-    // Fill VBO with data and then bind VBO to VAO
-    glBindVertexArray(vaoUpBackground);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vboUpBackground);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(upBackground), upBackground, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
-
-    GLfloat downBackground[] =
-    {
-        // Coords               // Colors
-        -2.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
-        -2.0f, -1.5f, -0.1f,    1.0f, 0.0f, 0.0f,
-        26.0f, -1.5f, -0.1f,    1.0f, 0.0f, 0.0f,
-
-        -2.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
-        26.0f, -0.4f, -0.1f,    1.0f, 0.0f, 0.0f,
-        26.0f, -1.5f, -0.1f,    1.0f, 0.0f, 0.0f
-    };
-
-    // Buffers generation
-    GLuint vboDownBackground;
-    GLuint vaoDownBackground;
-
-    glGenBuffers(1, &vboDownBackground);
-    glGenVertexArrays(1, &vaoDownBackground);
-
-    // Fill VBO with data and then bind VBO to VAO
-    glBindVertexArray(vaoDownBackground);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vboDownBackground);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(downBackground), downBackground, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
-
     // Player
     player = new Player (glm::vec3(0.0f, 0.0f, 0.0f), Heroes::MANLY_BOMBER);
 
@@ -332,7 +181,6 @@ int main(int argc, char const *argv[])
         // Callbacks
         glfwPollEvents();
         doMovement();
-        scroll();
 
         // Clear window
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -346,80 +194,17 @@ int main(int argc, char const *argv[])
         // Send view matrix to shader program
         glm::mat4 view;
         view = camera.getViewMatrix();
-        view = glm::translate(view, scrolling);
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 
-        // Bind VAO
-        glBindVertexArray(vaoSquare);
-
-        // Draw player square
-
-        // Send model matrix to shader program
-        glm::mat4 modelPlayer;
-        modelPlayer = glm::translate(modelPlayer, positions[0]);
-        modelPlayer = glm::translate(modelPlayer, movement);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelPlayer));
-
-        // Draw 3D object in VBO
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // Draw other player square
-
-        glm::mat4 modelOtherPlayer;
-        modelOtherPlayer = glm::translate(modelOtherPlayer, positions[1]);
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelOtherPlayer));
-
-        // Draw 3D object in VBO
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // Draw bomb square
-
-        // Send model matrix to shader program
-        glm::mat4 modelBomb;
-        modelBomb = glm::rotate(modelBomb, glm::radians(360.0f * (GLfloat)glfwGetTime()), glm::vec3(0.0f, 0.0f, 1.0f));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelBomb));
-
-        // Draw 3D object in VBO
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // Unbind VAO
-        glBindVertexArray(0);
-
-        // Draw up background
-
-        // Bind VAO
-        glBindVertexArray(vaoUpBackground);
-
-        // Send model matrix to shader program
-        glm::mat4 modelUpBackground;
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelUpBackground));
-
-        // Draw 3D object in VBO
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // Unbind VAO
-        glBindVertexArray(0);
-
-        // Draw down background
-
-        // Bind VAO
-        glBindVertexArray(vaoDownBackground);
-
-        // Send model matrix to shader program
-        glm::mat4 modelDownBackground;
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(modelDownBackground));
-
-        // Draw 3D object in VBO
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-
-        // Unbind VAO
-        glBindVertexArray(0);
-
+        //Draw player
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(player->getModelMatrix()));
         player->draw();
 
         glfwSwapBuffers(window);
     }
+
+    // Delete player
+    delete player;
 
     // Close window and finish program
     glfwTerminate();

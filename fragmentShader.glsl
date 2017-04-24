@@ -1,10 +1,13 @@
 #version 330 core
 
-in vec4 vertexColor;
+in vec2 vertexTexturePosition;
 
 out vec4 fragmentColor;
 
+uniform sampler2D textureChannel;
+
 void main()
 {
-    fragmentColor = vertexColor;
+    vec2 fragmentTexturePosition = vec2(vertexTexturePosition.x, 1 - vertexTexturePosition.y);
+    fragmentColor = texture(textureChannel, fragmentTexturePosition);
 }

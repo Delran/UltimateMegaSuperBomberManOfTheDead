@@ -2,12 +2,15 @@
 #define PLAYER_HPP
 
 // Glew
-#include <GL/glew.h>
+#include <GLEW/glew.h>
+
+// Soil
+#include <SOIL/SOIL.h>
 
 // Glm
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <GLM/glm.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtc/type_ptr.hpp>
 
 // Hero class
 #include "Hero.hpp"
@@ -28,8 +31,10 @@ public:
     Player (const glm::vec3&, const Heroes);
     virtual ~Player ();
     const glm::mat4& getModelMatrix() const;
+    const GLuint getTexture() const;
     void draw();
     void specialAction();
+    void move();
 private:
     Player() = delete;
     glm::vec3 position;
@@ -37,7 +42,7 @@ private:
     Hero* hero;
     GLuint vao;
     GLuint vbo;
-    GLuint playerTexture;
+    GLuint texture;
 };
 
 #endif

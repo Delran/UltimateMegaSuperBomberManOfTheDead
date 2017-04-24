@@ -7,12 +7,12 @@
 #include <iostream>
 
 // Glew
-#include <GL/glew.h>
+#include <GLEW/glew.h>
 
 // Glm
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <GLM/glm.hpp>
+#include <GLM/gtc/matrix_transform.hpp>
+#include <GLM/gtc/type_ptr.hpp>
 
 /* === CameraMovement enumeration === */
 

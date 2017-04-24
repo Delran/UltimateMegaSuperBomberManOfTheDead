@@ -10,7 +10,7 @@
 #include <iostream>
 
 // Include glew to get all the required OpenGL headers
-#include <GL/glew.h>
+#include <GLEW/glew.h>
 
 /* === Shader class === */
 

@@ -1,7 +1,6 @@
-
 CC = g++
-CFLAGS = -std=c++14
-LDFLAGS= -I -L -lglut32 -lopengl32
+CFLAGS = -std=gnu++14
+LDFLAGS= -lglew32 -lglfw3 -lSOIL -lopengl32 -lgdi32 -lopengl32 -lgdi32
 EXEC = MainlyBomber
 
 SRC=$(wildcard *.cpp)

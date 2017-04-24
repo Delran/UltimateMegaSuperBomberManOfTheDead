@@ -4,4 +4,7 @@ Hero::Hero (const float _speed, const float _bombHoldingTime, const std::string&
     :speed(_speed), bombHoldingTime(_bombHoldingTime), texturePath(_texturePath)
 {}
 
-Hero::~Hero(){}
+Hero::~Hero()
+{
+    delete[] vertices;
+}
