@@ -24,3 +24,8 @@ mrproper: clean
 
 exe: all
 	@$(EXEC).exe
+
+make: clean $(EXEC)
+
+makexe: clean $(EXEC)
+	@$(EXEC).exe
