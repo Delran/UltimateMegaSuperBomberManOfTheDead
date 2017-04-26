@@ -87,9 +87,18 @@ void Player::specialAction()
     hero->specialAction();
 }
 
-void Player::move()
+void Player::move(const Direction direction, const float deltaTime)
 {
-    ;
+    if (direction == Direction::LEFT)
+    {
+        position.x -= deltaTime * 0.01;
+        model = glm::translate(model, glm::vec3(-deltaTime, 0.0f, 0.0f));
+    }
+    else
+    {
+        position.x += deltaTime * 0.01;
+        model = glm::translate(model, glm::vec3(deltaTime, 0.0f, 0.0f));
+    }
 }
 
 const glm::mat4& Player::getModelMatrix() const

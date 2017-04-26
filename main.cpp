@@ -88,27 +88,19 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 
 void doMovement()
 {
-    /*// Move the camera in the chosen direction
-    if (keys[GLFW_KEY_W])
-    {
-        movement += (glm::vec3 (0.0f, 1.0f, 0.0f) * deltaTime);
-    }
-    if (keys[GLFW_KEY_S])
-    {
-        movement -= (glm::vec3 (0.0f, 1.0f, 0.0f) * deltaTime);
-    }
+    // Move the camera in the chosen direction
     if (keys[GLFW_KEY_A])
     {
-        movement -= (glm::vec3 (1.0f, 0.0f, 0.0f) * deltaTime * 2.0f);
+        player->move(Direction::LEFT, deltaTime);
     }
     if (keys[GLFW_KEY_D])
     {
-        movement += (glm::vec3 (1.0f, 0.0f, 0.0f) * deltaTime * 2.0f);
+        player->move(Direction::RIGHT, deltaTime);
     }
     if (keys[GLFW_KEY_Q])
     {
         player->specialAction();
-    }*/
+    }
 }
 
 /* --- Main function --- */
@@ -169,6 +161,9 @@ int main(int argc, char const *argv[])
 
     // Player
     player = new Player (glm::vec3(0.0f, 0.0f, 0.0f), Heroes::MANLY_BOMBER);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Game loop
     while (!glfwWindowShouldClose(window))

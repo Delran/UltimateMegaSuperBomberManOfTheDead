@@ -25,6 +25,12 @@ enum class Heroes
     MANLY_BOMBER = 0
 };
 
+enum class Direction
+{
+    LEFT = 0,
+    RIGHT = 1
+};
+
 class Player
 {
 public:
@@ -34,7 +40,7 @@ public:
     const GLuint getTexture() const;
     void draw();
     void specialAction();
-    void move();
+    void move(const Direction, const float);
 private:
     Player() = delete;
     glm::vec3 position;
