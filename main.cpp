@@ -45,6 +45,9 @@ Camera camera (glm::vec3 (0.0f, 0.0f, 2.0f), glm::vec3 (0.0f, 1.0f, 0.0f), -90.0
 // Player
 Player* player;
 
+// Movement
+bool movedLastFrame = false;
+
 /* --- Key callback function --- */
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -88,18 +91,26 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 
 void doMovement()
 {
-    // Move the camera in the chosen direction
-    if (keys[GLFW_KEY_A])
+    if (movedLastFrame)
     {
-        player->move(Direction::LEFT, deltaTime);
+        movedLastFrame = false;
     }
-    if (keys[GLFW_KEY_D])
+    else
     {
-        player->move(Direction::RIGHT, deltaTime);
-    }
-    if (keys[GLFW_KEY_Q])
-    {
-        player->specialAction();
+        // Move the camera in the chosen direction
+        if (keys[GLFW_KEY_A])
+        {
+            player->move(Direction::LEFT, deltaTime);
+        }
+        if (keys[GLFW_KEY_D])
+        {
+            player->move(Direction::RIGHT, deltaTime);
+        }
+        if (keys[GLFW_KEY_Q])
+        {
+            player->specialAction();
+        }
+        movedLastFrame = true;
     }
 }
 
