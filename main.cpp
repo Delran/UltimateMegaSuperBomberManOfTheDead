@@ -45,9 +45,6 @@ Camera camera (glm::vec3 (0.0f, 0.0f, 2.0f), glm::vec3 (0.0f, 1.0f, 0.0f), -90.0
 // Player
 Player* player;
 
-// Movement
-bool movedLastFrame = false;
-
 /* --- Key callback function --- */
 
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -91,26 +88,18 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 
 void doMovement()
 {
-    if (movedLastFrame)
+    // Move the camera in the chosen direction
+    if (keys[GLFW_KEY_A])
     {
-        movedLastFrame = false;
+        player->move(Direction::LEFT, deltaTime);
     }
-    else
+    if (keys[GLFW_KEY_D])
     {
-        // Move the camera in the chosen direction
-        if (keys[GLFW_KEY_A])
-        {
-            player->move(Direction::LEFT, deltaTime);
-        }
-        if (keys[GLFW_KEY_D])
-        {
-            player->move(Direction::RIGHT, deltaTime);
-        }
-        if (keys[GLFW_KEY_Q])
-        {
-            player->specialAction();
-        }
-        movedLastFrame = true;
+        player->move(Direction::RIGHT, deltaTime);
+    }
+    if (keys[GLFW_KEY_Q])
+    {
+        player->specialAction();
     }
 }
 
@@ -143,7 +132,7 @@ int main(int argc, char const *argv[])
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Activates V-sync
-    glfwSwapInterval(1);
+    glfwSwapInterval(0.5f);
 
     // Set callback functions
     glfwSetKeyCallback(window, keyCallback);
