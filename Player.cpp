@@ -122,7 +122,7 @@ void Player::idle(const float deltaTime)
     if (position.y <= 0.0f)
     {
         touchedGround = true;
-        model = glm::translate(model, glm::vec3(0.0f, - deltaTime * position.y, 0.0f));
+        model = glm::translate(model, glm::vec3(0.0f, - position.y, 0.0f));
         position.y = 0.0f;
     }
 
