@@ -125,6 +125,12 @@ void Player::idle(const float deltaTime)
         model = glm::translate(model, glm::vec3(0.0f, - position.y, 0.0f));
         position.y = 0.0f;
     }
+    if (position.y > 0.2f)
+    {
+        model = glm::translate(model, glm::vec3(0.0f, 0.2f - position.y, 0.0f));
+        position.y = 0.2f;
+        gravity.y = -0.3f;
+    }
 
     hero->idle();
 }
