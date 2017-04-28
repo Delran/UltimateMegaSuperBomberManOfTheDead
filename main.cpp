@@ -116,7 +116,7 @@ int main(int argc, char const *argv[])
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    //glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create a GLFW window
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game", nullptr, nullptr);
@@ -159,6 +159,68 @@ int main(int argc, char const *argv[])
     Shader shaderProgram ("vertexShader.glsl", "fragmentShader.glsl");
     shaderProgram.use();
 
+    /* --- BACKGROUND --- */
+
+    GLfloat vertices[]
+    {
+        -2, -2, 0,  0.0f, 0.0f,
+        2, -2, 0,   1.0f, 0.0f,
+        2, 2, 0,    1.0f, 1.0f,
+
+        -2, -2, 0,  0.0f, 0.0f,
+        -2, 2, 0,   0.0f, 1.0f,
+        2, 2, 0,    1.0f, 1.0f
+    };
+
+    GLuint vboBack;
+    GLuint vaoBack;
+
+    glGenBuffers(1, &vboBack);
+    glGenVertexArrays(1, &vaoBack);
+
+    glBindVertexArray(vaoBack);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vboBack);
+    glBufferData(GL_ARRAY_BUFFER, 30 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0);
+
+    GLuint texture;
+
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // Some settings for the texture
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Read texture from file
+    int texWidth;
+    int texHeight;
+    unsigned char* backgroundImage = SOIL_load_image("background.jpg", &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
+
+    // Fill texture with read data
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, backgroundImage);
+
+    // Generate mipmaps
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Properly delete image data
+    SOIL_free_image_data(backgroundImage);
+
+    // Unbind texture
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    /* --- === --- */
+
     // Player
     player = new Player (glm::vec3(0.0f, 0.0f, 0.0f), Heroes::MANLY_BOMBER);
 
@@ -190,6 +252,23 @@ int main(int argc, char const *argv[])
         glm::mat4 view;
         view = camera.getViewMatrix();
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+
+        /* --- BACKGROUND --- */
+
+        glm::mat4 model;
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+        glBindVertexArray(vaoBack);
+
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        glBindVertexArray(0);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        /* --- === --- */
 
         //Draw player
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(player->getModelMatrix()));

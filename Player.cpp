@@ -33,8 +33,8 @@ Player::Player(const glm::vec3& initialPosition, const Heroes selectedHero)
     glBindTexture(GL_TEXTURE_2D, texture);
 
     // Some settings for the texture
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -91,13 +91,13 @@ void Player::move(const Direction direction, const float deltaTime)
 {
     if (direction == Direction::LEFT)
     {
-        position.x -= deltaTime * 0.5f;
-        model = glm::translate(model, glm::vec3(-deltaTime * 0.5f, 0.0f, 0.0f));
+        position.x -= deltaTime * hero->speed;
+        model = glm::translate(model, glm::vec3(-deltaTime * hero->speed, 0.0f, 0.0f));
     }
     else
     {
-        position.x += deltaTime * 0.5f;
-        model = glm::translate(model, glm::vec3(deltaTime * 0.5f, 0.0f, 0.0f));
+        position.x += deltaTime * hero->speed;
+        model = glm::translate(model, glm::vec3(deltaTime * hero->speed, 0.0f, 0.0f));
     }
 }
 
