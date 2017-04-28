@@ -116,7 +116,7 @@ int main(int argc, char const *argv[])
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    //glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create a GLFW window
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game", nullptr, nullptr);
@@ -132,7 +132,7 @@ int main(int argc, char const *argv[])
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // Activates V-sync
-    glfwSwapInterval(0.5f);
+    glfwSwapInterval(1);
 
     // Set callback functions
     glfwSetKeyCallback(window, keyCallback);
@@ -164,12 +164,12 @@ int main(int argc, char const *argv[])
     GLfloat vertices[]
     {
         -2, -2, 0,  0.0f, 0.0f,
-        2, -2, 0,   1.0f, 0.0f,
-        2, 2, 0,    1.0f, 1.0f,
+        2, -2, 0,   0.1f, 0.0f,
+        2, 2, 0,    0.1f, 1.0f,
 
         -2, -2, 0,  0.0f, 0.0f,
         -2, 2, 0,   0.0f, 1.0f,
-        2, 2, 0,    1.0f, 1.0f
+        2, 2, 0,    0.1f, 1.0f
     };
 
     GLuint vboBack;
@@ -205,7 +205,7 @@ int main(int argc, char const *argv[])
     // Read texture from file
     int texWidth;
     int texHeight;
-    unsigned char* backgroundImage = SOIL_load_image("background.jpg", &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
+    unsigned char* backgroundImage = SOIL_load_image("background.png", &texWidth, &texHeight, 0, SOIL_LOAD_RGBA);
 
     // Fill texture with read data
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, backgroundImage);
