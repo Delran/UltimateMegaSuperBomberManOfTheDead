@@ -22,8 +22,8 @@
 /* --- Constants --- */
 
 // Window size
-const GLuint WIDTH = 1600;
-const GLuint HEIGHT = 900;
+const GLuint WIDTH = 1920;
+const GLuint HEIGHT = 1080;
 
 /* --- Global variables --- */
 
@@ -119,7 +119,7 @@ int main(int argc, char const *argv[])
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Create a GLFW window
-    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game", glfwGetPrimaryMonitor(), nullptr);
     if (window == nullptr)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -199,7 +199,7 @@ int main(int argc, char const *argv[])
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // Read texture from file
