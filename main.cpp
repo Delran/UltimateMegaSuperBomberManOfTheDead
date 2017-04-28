@@ -89,6 +89,10 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 void doMovement()
 {
     // Move the camera in the chosen direction
+    if (keys[GLFW_KEY_W])
+    {
+        player->jump();
+    }
     if (keys[GLFW_KEY_A])
     {
         player->move(Direction::LEFT, deltaTime);
@@ -116,7 +120,7 @@ int main(int argc, char const *argv[])
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwWindowHint(GLFW_SAMPLES, 16);
 
     // Create a GLFW window
     GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Game", glfwGetPrimaryMonitor(), nullptr);
@@ -271,6 +275,7 @@ int main(int argc, char const *argv[])
         /* --- === --- */
 
         //Draw player
+        player->idle(deltaTime);
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram.program, "model"), 1, GL_FALSE, glm::value_ptr(player->getModelMatrix()));
         player->draw();
 

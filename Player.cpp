@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 Player::Player(const glm::vec3& initialPosition, const Heroes selectedHero)
-    :position(initialPosition)
+    :position(initialPosition), touchedGround(true)
 {
     model = glm::translate(model, position);
 
@@ -69,8 +69,6 @@ Player::~Player()
 
 void Player::draw()
 {
-    hero->idle();
-
     glBindTexture(GL_TEXTURE_2D, texture);
 
     glBindVertexArray(vao);
@@ -99,6 +97,36 @@ void Player::move(const Direction direction, const float deltaTime)
         position.x += deltaTime * hero->speed;
         model = glm::translate(model, glm::vec3(deltaTime * hero->speed, 0.0f, 0.0f));
     }
+}
+
+void Player::jump()
+{
+    if (touchedGround)
+    {
+        gravity.y = 4.0f;
+        touchedGround = false;
+    }
+}
+
+void Player::idle(const float deltaTime)
+{
+    if (!touchedGround)
+    {
+        gravity.y -= 0.3f;
+    }
+    if (position.y >= 0.0f)
+    {
+        position.y += deltaTime * gravity.y;
+        model = glm::translate(model, glm::vec3(0.0f, deltaTime * gravity.y, 0.0f));
+    }
+    if (position.y <= 0.0f)
+    {
+        touchedGround = true;
+        model = glm::translate(model, glm::vec3(0.0f, - deltaTime * position.y, 0.0f));
+        position.y = 0.0f;
+    }
+
+    hero->idle();
 }
 
 const glm::mat4& Player::getModelMatrix() const

@@ -41,9 +41,13 @@ public:
     void draw();
     void specialAction();
     void move(const Direction, const float);
+    void jump();
+    void idle(const float);
 private:
     Player() = delete;
     glm::vec3 position;
+    glm::vec3 gravity;
+    bool touchedGround;
     glm::mat4 model;
     Hero* hero;
     GLuint vao;
