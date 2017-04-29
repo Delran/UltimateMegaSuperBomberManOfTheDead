@@ -1,7 +1,7 @@
 #include "ManlyBomber.hpp"
 
 ManlyBomber::ManlyBomber()
-    :Hero(1.0f, 3.0f, "manlyBomber.png")
+    :Hero(1.0f, -2.6f, 4.0f, "manlyBomber.png")
 {
     vertices = new float[30]
     {

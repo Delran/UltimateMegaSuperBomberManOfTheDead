@@ -17,10 +17,11 @@ private:
     virtual void specialAction() = 0;
 
     float speed;
-    float bombHoldingTime;
+    float gravity;
+    float jumpHeight;
     std::string texturePath;
 protected:
-    Hero (const float, const float, const std::string&);
+    Hero (const float, const float, const float, const std::string&);
     float* vertices;
 };
 

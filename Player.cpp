@@ -1,7 +1,7 @@
 #include "Player.hpp"
 
 Player::Player(const glm::vec3& initialPosition, const Heroes selectedHero)
-    :position(initialPosition), touchedGround(true)
+    :position(initialPosition), jumpVector(glm::vec3 (0.0f, 0.0f, 0.0f)), touchedGround(true), onWall(false)
 {
     model = glm::translate(model, position);
 
@@ -85,52 +85,51 @@ void Player::specialAction()
     hero->specialAction();
 }
 
-void Player::move(const Direction direction, const float deltaTime)
+void Player::move(const bool keys[], const float deltaTime)
 {
-    if (direction == Direction::LEFT)
+    if (keys[GLFW_KEY_A])
     {
         position.x -= deltaTime * hero->speed;
         model = glm::translate(model, glm::vec3(-deltaTime * hero->speed, 0.0f, 0.0f));
     }
-    else
+    if (keys[GLFW_KEY_D])
     {
         position.x += deltaTime * hero->speed;
         model = glm::translate(model, glm::vec3(deltaTime * hero->speed, 0.0f, 0.0f));
     }
-}
-
-void Player::jump()
-{
-    if (touchedGround)
+    if ((keys[GLFW_KEY_W]) && (touchedGround))
     {
-        gravity.y = 4.0f;
+        jumpVector.y = hero->jumpHeight;
         touchedGround = false;
     }
 }
 
 void Player::idle(const float deltaTime)
 {
-    if (!touchedGround)
+    glm::vec3 newPosition;
+    glm::mat4 newModel;
+
+    newPosition.x = position.x + (jumpVector.x * deltaTime);
+    newPosition.y = position.y + ((hero->gravity + jumpVector.y) * deltaTime);
+
+    if (jumpVector.y > 0.0f)
     {
-        gravity.y -= 0.3f;
+        jumpVector.y += hero->gravity * deltaTime;
     }
-    if (position.y >= 0.0f)
+
+    if (newPosition.y <= 0.0f)
     {
-        position.y += deltaTime * gravity.y;
-        model = glm::translate(model, glm::vec3(0.0f, deltaTime * gravity.y, 0.0f));
-    }
-    if (position.y <= 0.0f)
-    {
+        newPosition.y = 0.0f;
+        jumpVector = glm::vec3 (0.0f, 0.0f, 0.0f);
         touchedGround = true;
-        model = glm::translate(model, glm::vec3(0.0f, - position.y, 0.0f));
-        position.y = 0.0f;
     }
-    if (position.y > 0.2f)
+    /*else if (newPosition.y > 0.2f)
     {
-        model = glm::translate(model, glm::vec3(0.0f, 0.2f - position.y, 0.0f));
-        position.y = 0.2f;
-        gravity.y = -0.3f;
-    }
+        newPosition.y = 0.2f;
+    }*/
+
+    position = newPosition;
+    model = glm::translate(newModel, position);
 
     hero->idle();
 }

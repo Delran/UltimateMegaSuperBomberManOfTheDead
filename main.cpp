@@ -88,23 +88,7 @@ void mouseCallback(GLFWwindow* window, double xPos, double yPos)
 
 void doMovement()
 {
-    // Move the camera in the chosen direction
-    if (keys[GLFW_KEY_W])
-    {
-        player->jump();
-    }
-    if (keys[GLFW_KEY_A])
-    {
-        player->move(Direction::LEFT, deltaTime);
-    }
-    if (keys[GLFW_KEY_D])
-    {
-        player->move(Direction::RIGHT, deltaTime);
-    }
-    if (keys[GLFW_KEY_Q])
-    {
-        player->specialAction();
-    }
+    player->move(keys, deltaTime);
 }
 
 /* --- Main function --- */
